@@ -1,0 +1,77 @@
+<?php
+class Code{
+	protected $width;
+	protected $height;
+	protected $yzm=array();
+	protected $str;
+	
+	protected function makeCodeArray(){
+		for($i=2;$i<=9;$i++){
+			$num[]=$i;	
+		}
+		for($i=65;$i<=90;$i++){
+			if( $i != 73 && $i != 79 ){//去除易混淆的字母
+				$capital[]=chr($i);	
+			}
+		}
+		for($i=97;$i<=122;$i++){
+			if( $i != 105 && $i != 108 && $i != 111){//去除易混淆的字母
+				$small[]=chr($i);
+			}
+		}
+		$arr=array($num,$capital,$small);
+		foreach($arr as $rows){
+			foreach($rows as $row){
+				$this->yzm[]=$row;	
+			}
+		}
+	}
+
+
+	protected function makeCode(){
+		header('content-type:image/gif');
+		$img=imagecreate($this->width,$this->height);
+		$color=imagecolorallocate($img,250,250,250);//画布颜色（图层背景颜色）
+		imagefill($img,0,0,$color);//填充画布
+
+		for($i=0;$i<4;$i++){
+			$angle 	= 	rand(-20,20);
+			$xStart 	= 	$i*($this->width/4);
+			$xEnd 	= 	$xStart+8;
+			$x 		= 	rand($xStart,$xEnd);
+			$y 		= 	rand(14,20);
+			$red 	= 	rand(100,170);
+			$green 	= 	rand(100,170);
+			$blue 	= 	rand(100,170);
+			$fontcolor 	= imagecolorallocate($img,$red,$green,$blue);
+			$index 		= rand(0,54);
+			imagettftext($img,14,0,$x,$y,$fontcolor,"./Library/Core/font/LiberationSerif-Italic.ttf",$this->yzm[$index]);
+			$this->str.=$this->yzm[$index];
+			$_SESSION['code']=$this->str;//将验证码字符串存入session
+		}
+		for ($k=1; $k<100 ; $k++) { 
+				$m=rand(2,78);
+				$n=rand(0,24);
+				imagesetpixel($img,$m,$n,$fontcolor);
+			}
+		for( $i = 1 ; $i <=2 ;$i++){
+			$lxStart=rand(0,10);
+			$lyStart=rand(0,23);
+			$lxEnd=rand(60,75);
+			$lyEnd=rand(0,23);
+			imageline($img,$lxStart,$lyStart, $lxEnd, $lyEnd,$fontcolor);
+		}
+		
+		imagegif($img);
+		imagedestory($img);
+	}
+	
+	public function getcode($_width,$_height){
+		$this->width=$_width;
+		$this->height=$_height;
+		$this->makeCodeArray();
+		$this->makeCode();
+		
+	}
+}//类结束
+

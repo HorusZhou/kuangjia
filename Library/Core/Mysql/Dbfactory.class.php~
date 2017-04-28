@@ -1,0 +1,32 @@
+<?php
+class Dbfactory{
+	private static $_classes = array();
+	private static $host = array(
+		'server'		=>	'localhost',
+		'user'		=>	'root',
+		'passwd'	=>	'123456',
+		'port'		=>	'3306',
+		'charset'	=>	'utf8',
+		'db'			=>	'test',
+		'prefix'		=>	"think_"
+	);
+	public static function create($type = "Mysql"){
+		if(!isset(self::$_classes["{$type}"])){
+			require_once $type.'.class.php';
+			self::$_classes["{$type}"] = new $type(self::$host);
+		}
+		return self::$_classes["{$type}"];//返回数据库操作类对象
+	}
+
+}//类结束
+
+$op=new Dbfactory();
+$mysql=$op::create("Mysql");
+$data=array('name'=>"小小",'age'=>21,'school'=>"深圳大小");
+// $add=$mysql->add('test',$data);
+// $_fields="id , age ,name";
+ $_where=array("id" =>13, "|name" =>"小孩");
+// $rows=$mysql->getList('test' , $_fields , $_where );
+ $rows=$mysql->update('test' , $data , $_where );
+var_dump($rows);
+?>

@@ -1,0 +1,18 @@
+<?php
+class ArticleController{
+	public function index(){
+		echo "this is Article_index function";
+	}
+	
+	public function test(){
+		$title = "小名";
+		$arr=array(array("name" => "xiaof" ,"sex" => "女"));
+		$data=array("name" => "哈哈哈");
+		$this->view->assign('data' ,$data);
+		$this->view->assign( 'arr' , $arr );
+		$this->view->assign( 'title' , $title );
+		$this->view->display('view.html');
+	}
+}//类结束
+
+?>
